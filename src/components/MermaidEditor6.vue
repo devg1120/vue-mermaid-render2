@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 
-import { ref, computed } from 'vue';
+import { ref, computed , onMounted } from 'vue';
 //import { VueMermaidRender } from 'vue-mermaid-render';
 import  VueMermaidRender  from './VueMermaidRender.vue';
 
@@ -36,6 +36,25 @@ import { MagnifyingGlassPlusIcon  } from "@heroicons/vue/24/outline";
 import { MagnifyingGlassMinusIcon  } from "@heroicons/vue/24/outline";
 
 
+monaco.editor.defineTheme('vs2', {
+    base: 'vs',
+    inherit: true,
+    rules: [
+      {
+        token: "identifier",
+        foreground: "#9CDCFE"
+      },
+      {
+        token: "identifier.function",
+        foreground: "#DCDCAA"
+      },
+      {
+        token: "type",
+        foreground: "#1AAFB0"
+      },
+    ],
+    colors: {}
+    });
 
 const toolbar_define = [
   {
@@ -167,10 +186,40 @@ function err_mermaid(msg) {
 const code_editor = ref();
 let editorInstance: monaco.editor.IStandaloneCodeEditor | null = null;
 
+//monaco.editor.defineTheme('vs2', theme)
 const onEditorMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
   editorInstance = editor;
+
+  monaco.editor.setTheme('vs2');
+  //monaco.editor.setTheme('vs');
+  //monaco.editor.setTheme('vs-white');
+  //monaco.editor.setTheme('vs-dark');
+  //monaco.editor.setTheme('hc-black');
+
   //console.log("option",editorInstance.getOption(monaco.editor.EditorOption.fontSize));
+
+  //monaco.editor.defineTheme('myTheme', theme)
+  /*
+  monaco.editor.defineTheme('myTheme', {
+        base: 'vs',
+        inherit: true,
+        rules: [],
+        colors: {
+            'editor.background': '#efefef',
+        },
+    });
+    */
 };
+
+  monaco.editor.defineTheme('myTheme', {
+        base: 'vs',
+        inherit: true,
+        rules: [],
+        colors: {
+            'editor.background': '#efefef',
+        },
+    });
+
 
 function incFontSize  () {
   if (editorInstance) {
@@ -249,7 +298,7 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
                        <CodeEditor
                          v-model:value="code"
                          language="mermaid"
-                         theme="vs-white"
+                         theme="hc-black"
                          :options="editorOptions"
                          @error="handleError"
 			 @ready="handleReady"
@@ -292,11 +341,14 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
   /*border-bottom : dotted 1px lightgray;*/
 }
 
+
 </style>
 <style>
 .vue-splitter .splitter-pane {
   overflow-y:hidden;
   overflow-x:hidden;
 }
+
+
 </style>
 
