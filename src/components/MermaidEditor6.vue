@@ -6,6 +6,8 @@ import { ref, computed } from 'vue';
 import  VueMermaidRender  from './VueMermaidRender.vue';
 
 import { CodeEditor } from 'monaco-editor-vue3';
+import * as monaco from 'monaco-editor';
+
 // Import the CSS styles
 import 'monaco-editor-vue3/dist/style.css';
 import { Tabs, Tab } from 'super-vue3-tabs'
@@ -20,6 +22,57 @@ import  Ref  from './Ref.vue'
 //initEditor(monacoEditor); 
 
 import { onErrorCaptured } from "vue";
+
+import Toolbar from "./toolbar/Toolbar.vue";
+import { ArrowUturnRightIcon } from "@heroicons/vue/24/outline";
+import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
+
+import { Cog6ToothIcon } from "@heroicons/vue/24/outline";
+import { EllipsisVerticalIcon } from "@heroicons/vue/24/outline";
+import { EllipsisHorizontalIcon } from "@heroicons/vue/24/outline";
+//magnifying-glass-plus
+//magnifying-glass-minus
+import { MagnifyingGlassPlusIcon  } from "@heroicons/vue/24/outline";
+import { MagnifyingGlassMinusIcon  } from "@heroicons/vue/24/outline";
+
+
+
+const toolbar_define = [
+  {
+    icon: ArrowUturnRightIcon,
+    name: "ArrowUturnRightIcon",
+    handler: "clickA",
+    tooltip: "A         OK",
+  },
+  {
+    icon: ArrowUturnLeftIcon,
+    name: "ArrowUturnLeftIcon",
+    tooltip: "B         OK",
+    handler: "clickB",
+  },
+  {
+    icon: MagnifyingGlassPlusIcon ,
+    name: "zoomin",
+    tooltip: "Zoom In",
+    handler: "clickB",
+  },
+  {
+    icon: MagnifyingGlassMinusIcon ,
+    name: "zoomout",
+    tooltip: "Zoom Out",
+    handler: "clickB",
+  },
+
+   {
+    icon: EllipsisVerticalIcon,
+    name: "EllipsisVerticalIcon",
+    alignright: true,
+    tooltip: "B         OK",
+  },
+  { icon: Cog6ToothIcon, name: "Cog6ToothIcon", tooltip: "B         OK" },
+
+];
+
 
 onErrorCaptured((error, insttance, info) => {
   // error: エラーのインスタンス
@@ -91,7 +144,7 @@ flowchart
 	Hello --> World
 `)
 
-const editorOptions = {
+let  editorOptions = {
   fontSize: 14,
   minimap: { enabled: false },
   automaticLayout: true
@@ -110,6 +163,57 @@ function handleReady() {
 function err_mermaid(msg) {
  console.log("Err Mermaid:", msg );
 }
+
+const code_editor = ref();
+let editorInstance: monaco.editor.IStandaloneCodeEditor | null = null;
+
+const onEditorMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
+  editorInstance = editor;
+  //console.log("option",editorInstance.getOption(monaco.editor.EditorOption.fontSize));
+};
+
+function incFontSize  () {
+  if (editorInstance) {
+    const currentSize = editorInstance.getOption(monaco.editor.EditorOption.fontSize);
+    editorInstance.updateOptions({ fontSize: currentSize + 1 });
+  }
+};
+function decFontSize  ()  {
+  if (editorInstance) {
+    const currentSize = editorInstance.getOption(monaco.editor.EditorOption.fontSize);
+    editorInstance.updateOptions({ fontSize: currentSize - 1 });
+  }
+};
+function toolbarItemClick(data) {
+  console.log(" App toolbar click:", data);
+
+  if (data == "zoomin" ) {
+      incFontSize();
+  } else if (data == "zoomout") {
+      decFontSize();
+
+  }
+
+}
+function toolbarItemToggle(data, state) {
+  console.log(" App toolbar toggle:", data, state);
+}
+
+function toolbarItemSelect(name, data) {
+  console.log(" App toolbar select:", name, data);
+}
+
+function toolbarItemSelectColor(name, data) {
+  console.log(" App toolbar select color:", name, data);
+}
+
+function toolbarItemRadio(radio_name, radio_index, name, state) {
+  console.log(" App toolbar Radio:", radio_name, radio_index, state);
+}
+
+
+
+
 </script>
 
 
@@ -125,6 +229,16 @@ function err_mermaid(msg) {
 	   
     </template>
     <template #right-pane>
+    <Toolbar
+      :toolbar_define="toolbar_define"
+      :icon_flat_mode="false"
+      @toolbarItemClick="toolbarItemClick"
+      @toolbarItemToggle="toolbarItemToggle"
+      @toolbarItemSelect="toolbarItemSelect"
+      @toolbarItemRadio="toolbarItemRadio"
+      class="toolbar"
+    />
+
       <vue-splitter
         class="container"
         is-horizontal
@@ -140,7 +254,8 @@ function err_mermaid(msg) {
                          @error="handleError"
 			 @ready="handleReady"
                          @loading="handleLoading"
-
+			 @editorDidMount="onEditorMount"
+                         ref="code_editor"
                        >
 
                        </CodeEditor>
@@ -170,6 +285,14 @@ function err_mermaid(msg) {
   </base-demo>
 </template>
 
+<style scoped>
+.toolbar {
+  padding : 4px 4px 2px 2px;
+  /* background : lightgray;*/
+  /*border-bottom : dotted 1px lightgray;*/
+}
+
+</style>
 <style>
 .vue-splitter .splitter-pane {
   overflow-y:hidden;

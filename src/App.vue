@@ -7,6 +7,7 @@ import { ref } from 'vue'
 //import MermaidEditor from  "./components/MermaidEditor5.vue"
 import MermaidEditor from  "./components/MermaidEditor6.vue"
 
+
 /*
 https://mermaid.js.org/syntax/flowchart.html
 */
@@ -72,6 +73,7 @@ setTimeout(() => {
   <VueMermaidRender :config="config" :content="content2" />
   <VueMermaidRender :config="config" :content="content3" />
   -->
+
   <MermaidEditor />
 </template>
 
