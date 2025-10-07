@@ -37,7 +37,7 @@ import { MagnifyingGlassMinusIcon  } from "@heroicons/vue/24/outline";
 
 
 monaco.editor.defineTheme('vs2', {
-    base: 'vs',
+    base: 'vs-dark',
     inherit: true,
     rules: [
       {
