@@ -40,6 +40,7 @@ import { EllipsisHorizontalIcon } from "@heroicons/vue/24/outline";
 import { MagnifyingGlassPlusIcon  } from "@heroicons/vue/24/outline";
 import { MagnifyingGlassMinusIcon  } from "@heroicons/vue/24/outline";
 import { BookOpenIcon  } from "@heroicons/vue/24/outline";
+import { ArrowDownOnSquareIcon  } from "@heroicons/vue/24/outline";
 
 
 const doc_pane_percent = ref(100);
@@ -65,6 +66,11 @@ monaco.editor.defineTheme('vs2', {
     });
 
 const toolbar_define = [
+  {
+    icon: ArrowDownOnSquareIcon,
+    name: "save",
+    tooltip: "save svg",
+  },
   {
     icon: ArrowUturnLeftIcon,
     name: "undo",
@@ -181,7 +187,7 @@ flowchart TB
 
 `)
 
-const code = ref(`---
+const code_old = ref(`---
 title: Hello Title
 config:
   theme: forest
@@ -190,6 +196,30 @@ flowchart
 	Hello --> World
 `)
 
+const code = ref(`---
+title: Hello Title
+config:
+  theme: forest
+---
+
+
+flowchart LR
+    subgraph subgraph1
+        direction TB
+        top1[top] --> bottom1[bottom]
+    end
+    subgraph subgraph2
+        direction TB
+        top2[top] --> bottom2[bottom]
+    end
+    %% ^ These subgraphs are identical, except for the links to them:
+
+    %% Link *to* subgraph1: subgraph1 direction is maintained
+    outside --> subgraph1
+    %% Link *within* subgraph2:
+    %% subgraph2 inherits the direction of the top-level graph (LR)
+    outside ---> top2
+`)
 let  editorOptions = {
   fontSize: 14,
   minimap: { enabled: false },
@@ -263,6 +293,68 @@ function decFontSize  ()  {
     editorInstance.updateOptions({ fontSize: currentSize - 1 });
   }
 };
+
+
+async function saveFile(filename, content) {
+ try {
+    // showSaveFilePickerがブラウザでサポートされているかどうかを確認する
+if ('showSaveFilePicker' in window) {
+        // ユーザーがファイルにアクセスできるかどうかを確認する
+if (navigator.userActivation.isActive) {
+   	//const filename = 'test.svg';
+    	//const content = 'Hello World!';
+            const options = await getOptions(filename, 'svg');
+            const handle = await window.showSaveFilePicker(options);
+            const writable = await handle.createWritable();
+            await writable.write(content);
+    				await writable.close();
+    				console.log('ファイルが正常に保存されました');
+    			} else {
+            throw new Error('navigator.userActivationが有効状態になっていません');
+        }
+    } else {
+        throw new Error('showSaveFilePickerがサポートされていません');
+    }
+ } catch (error) {
+    		// 保存失敗
+    console.error(error);
+    alert(error);
+  }
+}
+
+ // オプション取得
+function getOptions(filename, type) {
+ switch (type) {
+    case 'text': return { suggestedName: filename, types: [{ accept: { 'text/plain': ['.txt'] } }] }
+    		default: break;
+    	}
+return { suggestedName: filename };
+}
+
+function prettifyXml(sourceXml)
+{
+    var xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
+    var xsltDoc = new DOMParser().parseFromString([
+        // describes how we want to modify the XML - indent everything
+        '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+        '  <xsl:strip-space elements="*"/>',
+        '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+        '    <xsl:value-of select="normalize-space(.)"/>',
+        '  </xsl:template>',
+        '  <xsl:template match="node()|@*">',
+        '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+        '  </xsl:template>',
+        '  <xsl:output indent="yes"/>',
+        '</xsl:stylesheet>',
+    ].join('\n'), 'application/xml');
+
+    var xsltProcessor = new XSLTProcessor();
+    xsltProcessor.importStylesheet(xsltDoc);
+    var resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+    var resultXml = new XMLSerializer().serializeToString(resultDoc);
+    return resultXml;
+};
+
 function toolbarItemClick(data) {
   console.log(" App toolbar click:", data);
 
@@ -281,6 +373,20 @@ function toolbarItemClick(data) {
      //model.canRedo();
      model.redo();
 
+  } else if (data == "save") {
+     let filename = "test.svg";
+
+     let render = document.getElementById("mermaid_render");
+     console.log(render);
+     let svgNode = render.querySelector("svg")
+
+     const svgXml = new XMLSerializer().serializeToString(svgNode);
+
+     let svgText = prettifyXml(svgXml);
+
+     saveFile(filename, svgText);
+     //let content = "hello world!!!";
+     //saveFile(filename, content);
   }
 
 }
@@ -325,9 +431,9 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
   <base-demo  initial-Percent=40
   >
     <template #left-pane>
-    
-       <VueMermaidRender :config="config" :content="code" @err-mermaid="err_mermaid"/>
-	   
+	    <div  id="mermaid_render">
+       <VueMermaidRender   :config="config" :content="code" @err-mermaid="err_mermaid"/>
+	    </div>
     </template>
     <template #right-pane>
     <Toolbar
