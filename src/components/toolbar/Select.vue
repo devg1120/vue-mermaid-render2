@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import VueSelect from "vue3-select-component";
 
-const props = defineProps(["name", "options"]);
+const props = defineProps(["name", "options", "placeholder", "isClearable"]);
 
 const emit = defineEmits(["toolbarItemSelect"]);
 
@@ -12,24 +12,40 @@ function select(option) {
   console.log("*** selected:", option.value, selected.value);
   emit("toolbarItemSelect", props.name, selected.value);
 }
-</script>
 
+const isClearable = false;
+
+</script>
+<!--
+
+      :placeholder="props.placeholder"
+      :isClearable="props.isClearable"
+      placeholder="light"
+      :isClearable="false"
+
+-->
 <template>
   <div class="selectitem">
     <VueSelect
       v-model="selected"
       :options="props.options"
-      placeholder="Select"
+      :placeholder="props.placeholder"
+      :isClearable="false"
       @option-selected="select"
     >
       <template #option="{ option, index }">
-        {{ option.label }} - {{ index }}
+        {{ option.label }} 
       </template>
     </VueSelect>
   </div>
 </template>
 
 <style scoped>
+.selectitem {
+}
+
+:deep(.vue-select) {
+}
 :deep(.control) {
   flex-wrap: nowrap !important;
 }

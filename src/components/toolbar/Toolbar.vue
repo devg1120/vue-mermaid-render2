@@ -110,12 +110,16 @@ const radioref = ref(null);
         v-if="item.select"
         :tooltip="item.tooltip"
         :name="item.name"
+	:isClearable="item.isClearable"
+	:placeholder="item.placeholder"
         :alignright="item.alignright"
       >
         <component
           v-bind:is="item.icon"
           :name="item.name"
           :options="item.options"
+	  :isClearable="item.isClearable"
+	  :placeholder="item.placeholder"
           @toolbarItemSelect="select_handler"
           class="select"
           :class="{ leftspace: item.leftspace, toggle: item.toggle }"
@@ -162,11 +166,11 @@ const radioref = ref(null);
 }
 
 .select {
-  margin: 3px 2px;
+  margin: 0px 2px;
   --vs-border: 0;
   --vs-border-radius: 0px;
   --vs-padding: 0px 4px;
-  --vs-min-height: 28px;
+  --vs-min-height: 25px;
   --vs-font-family: inherit;
   box-shadow: 2px 2px 0px 0 lightgray;
 }

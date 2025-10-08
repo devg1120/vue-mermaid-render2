@@ -349,6 +349,11 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.50.1.tgz#fc0be1da374f85e7e85dccaf1ff12d7cfc9fbe3d"
   integrity sha512-MCgtFB2+SVNuQmmjHf+wfI4CMxy3Tk8XjA5Z//A0AKD7QXUYFMQcns91K6dEHBvZPCnhJSyDWLApk40Iq/H3tA==
 
+"@rollup/rollup-linux-x64-gnu@4.52.3":
+  version "4.52.3"
+  resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.52.3.tgz#ed63dec576799fa5571eee5b2040f65faa82b49b"
+  integrity sha512-tPgGd6bY2M2LJTA1uGq8fkSPK8ZLYjDjY+ZLK9WHncCnfIz29LIXIqUgzCR0hIefzy6Hpbe8Th5WOSwTM8E7LA==
+
 "@rollup/rollup-linux-x64-musl@4.50.1":
   version "4.50.1"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.50.1.tgz#54c79932e0f9a3c992b034c82325be3bcde0d067"
@@ -1663,6 +1668,13 @@ vue-tsc@^3.0.5:
   dependencies:
     "@volar/typescript" "2.4.23"
     "@vue/language-core" "3.0.7"
+
+vue3-select-component@^0.12.3:
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/vue3-select-component/-/vue3-select-component-0.12.3.tgz#2cb0ba62c9205476bef6df1a2043c60f7e27eea9"
+  integrity sha512-/tRFy8yqkGeYsAJTi3J6L6Ybn1o92G25GMk6rTRgrd9AiUEcMIoYfipvyTUs7Jy7QyStO4BrHhl4FaBCMf6HCA==
+  optionalDependencies:
+    "@rollup/rollup-linux-x64-gnu" "4.52.3"
 
 vue@^3.4.19, vue@^3.5.18:
   version "3.5.21"

@@ -10,6 +10,11 @@ import * as monaco from 'monaco-editor';
 
 // Import the CSS styles
 import 'monaco-editor-vue3/dist/style.css';
+
+
+import mermaid_initEditor from 'monaco-mermaid';
+
+
 import { Tabs, Tab } from 'super-vue3-tabs'
 
 import VueSplitter from '@rmp135/vue-splitter'
@@ -18,12 +23,12 @@ import BaseDemo from './BaseDemo.vue'
 import { GenLorum } from './Helpers'
 import  Ref  from './Ref.vue'
 
-//import initEditor from 'monaco-mermaid';
-//initEditor(monacoEditor); 
 
 import { onErrorCaptured } from "vue";
 
 import Toolbar from "./toolbar/Toolbar.vue";
+import Select from "./toolbar/Select.vue";
+
 import { ArrowUturnRightIcon } from "@heroicons/vue/24/outline";
 import { ArrowUturnLeftIcon } from "@heroicons/vue/24/outline";
 
@@ -34,7 +39,10 @@ import { EllipsisHorizontalIcon } from "@heroicons/vue/24/outline";
 //magnifying-glass-minus
 import { MagnifyingGlassPlusIcon  } from "@heroicons/vue/24/outline";
 import { MagnifyingGlassMinusIcon  } from "@heroicons/vue/24/outline";
+import { BookOpenIcon  } from "@heroicons/vue/24/outline";
 
+
+const doc_pane_percent = ref(100);
 
 monaco.editor.defineTheme('vs2', {
     base: 'vs-dark',
@@ -58,16 +66,14 @@ monaco.editor.defineTheme('vs2', {
 
 const toolbar_define = [
   {
-    icon: ArrowUturnRightIcon,
-    name: "ArrowUturnRightIcon",
-    handler: "clickA",
-    tooltip: "A         OK",
+    icon: ArrowUturnLeftIcon,
+    name: "undo",
+    tooltip: "undo",
   },
   {
-    icon: ArrowUturnLeftIcon,
-    name: "ArrowUturnLeftIcon",
-    tooltip: "B         OK",
-    handler: "clickB",
+    icon: ArrowUturnRightIcon,
+    name: "redo",
+    tooltip: "redo",
   },
   {
     icon: MagnifyingGlassPlusIcon ,
@@ -82,10 +88,31 @@ const toolbar_define = [
     handler: "clickB",
   },
 
+  {
+    icon: BookOpenIcon ,
+    name: "book",
+    toggle: true,
+    tooltip: "Book Open",
+    handler: "clickB",
+    alignright: true,
+  },
+  {
+    icon: Select,
+    select: true,
+    isClearable: false,
+    placeholder: "dark",
+    name: "theme",
+    options: [
+      { label: "light", value: "mermaid" },
+      { label: "dark" , value: "mermaid-dark" },
+    ],
+
+    tooltip: "Select         OK",
+  },
+
    {
     icon: EllipsisVerticalIcon,
     name: "EllipsisVerticalIcon",
-    alignright: true,
     tooltip: "B         OK",
   },
   { icon: Cog6ToothIcon, name: "Cog6ToothIcon", tooltip: "B         OK" },
@@ -185,12 +212,15 @@ function err_mermaid(msg) {
 
 const code_editor = ref();
 let editorInstance: monaco.editor.IStandaloneCodeEditor | null = null;
+mermaid_initEditor(monaco); 
 
 //monaco.editor.defineTheme('vs2', theme)
 const onEditorMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
   editorInstance = editor;
-
-  monaco.editor.setTheme('vs2');
+//initEditor(monaco); 
+  //monaco.editor.setTheme('vs2');
+  //monaco.editor.setTheme('mermaid');
+  monaco.editor.setTheme('mermaid-dark');
   //monaco.editor.setTheme('vs');
   //monaco.editor.setTheme('vs-white');
   //monaco.editor.setTheme('vs-dark');
@@ -241,15 +271,37 @@ function toolbarItemClick(data) {
   } else if (data == "zoomout") {
       decFontSize();
 
+  } else if (data == "undo") {
+     const model = editorInstance.getModel();
+     //model.canUndo();
+     model.undo();
+
+  } else if (data == "redo") {
+     const model = editorInstance.getModel();
+     //model.canRedo();
+     model.redo();
+
   }
 
 }
-function toolbarItemToggle(data, state) {
-  console.log(" App toolbar toggle:", data, state);
+function toolbarItemToggle(name, state) {
+  console.log(" App toolbar toggle:", name, state);
+  if ( name == "book" ) {
+      if (doc_pane_percent.value == 100 ) {
+          doc_pane_percent.value = 50;
+      } else {
+          doc_pane_percent.value = 100;
+      }
+      // console.log(doc_pane_percent.value);
+
+  }
 }
 
-function toolbarItemSelect(name, data) {
-  console.log(" App toolbar select:", name, data);
+function toolbarItemSelect(type, theme_name) {
+  console.log(" App toolbar select:", type, theme_name);
+  if ( type == "theme" ) {
+     monaco.editor.setTheme(theme_name);
+  }
 }
 
 function toolbarItemSelectColor(name, data) {
@@ -291,6 +343,8 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
       <vue-splitter
         class="container"
         is-horizontal
+	:initial-percent="100"
+	v-model:percent="doc_pane_percent"
       >
         <template #top-pane  >
             <Tabs  >
@@ -323,7 +377,7 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
               </Tab>
             </Tabs>
 	</template>
-        <template #bottom-pane>
+        <template #bottom-pane >
 <!--
           <div>{{lorumipsum}}</div>
 -->

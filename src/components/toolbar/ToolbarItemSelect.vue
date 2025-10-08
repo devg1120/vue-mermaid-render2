@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, useTemplateRef } from "vue";
 
-const props = defineProps(["tooltip", "name", "alignright"]);
+const props = defineProps(["tooltip", "name", "isClearable", "placeholder","alignright"]);
 
 const emit = defineEmits(["toolbarItemSelect"]);
 
@@ -89,6 +89,7 @@ onMounted(() => {
   font-size: 14px;
   line-height: 1.2;
   padding: 8px 14px;
+  z-index: 100;
 }
 
 .tip_active {
