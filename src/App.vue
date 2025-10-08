@@ -5,7 +5,7 @@ import { ref } from 'vue'
 //import { VueMermaidRender } from 'vue-mermaid-render'
 //import MermaidEditor from  "./components/MermaidEditor2.vue"
 //import MermaidEditor from  "./components/MermaidEditor5.vue"
-import MermaidEditor from  "./components/MermaidEditor6.vue"
+import MermaidEditor from  "./components/MermaidEditor7.vue"
 
 
 /*
