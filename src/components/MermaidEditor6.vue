@@ -42,6 +42,9 @@ import { MagnifyingGlassMinusIcon  } from "@heroicons/vue/24/outline";
 import { BookOpenIcon  } from "@heroicons/vue/24/outline";
 import { ArrowDownOnSquareIcon  } from "@heroicons/vue/24/outline";
 
+//file-type-svg
+import { IconFileTypeSvg } from "@tabler/icons-vue";
+
 
 const doc_pane_percent = ref(100);
 
@@ -67,7 +70,8 @@ monaco.editor.defineTheme('vs2', {
 
 const toolbar_define = [
   {
-    icon: ArrowDownOnSquareIcon,
+    //icon: ArrowDownOnSquareIcon,
+    icon: IconFileTypeSvg,
     name: "save",
     tooltip: "save svg",
   },
@@ -355,7 +359,7 @@ function prettifyXml(sourceXml)
     return resultXml;
 };
 
-function toolbarItemClick(data) {
+async function toolbarItemClick(data) {
   console.log(" App toolbar click:", data);
 
   if (data == "zoomin" ) {
