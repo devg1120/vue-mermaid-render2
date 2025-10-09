@@ -166,6 +166,16 @@ const radioref = ref(null);
 }
 
 .select {
+  margin: 3px 2px;
+  --vs-border: 0;
+  --vs-border-radius: 0px;
+  --vs-padding: 0px 4px;
+  --vs-min-height: 28px;
+  --vs-font-family: inherit;
+  box-shadow: 2px 2px 0px 0 lightgray;
+}
+/*
+.select {
   margin: 0px 2px;
   --vs-border: 0;
   --vs-border-radius: 0px;
@@ -174,6 +184,7 @@ const radioref = ref(null);
   --vs-font-family: inherit;
   box-shadow: 2px 2px 0px 0 lightgray;
 }
+*/
 
 .menu {
   font-family: monospace;

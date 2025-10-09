@@ -68,13 +68,33 @@ monaco.editor.defineTheme('vs2', {
     colors: {}
     });
 
-const toolbar_define = [
+const toolbar_define1 = [
   {
     //icon: ArrowDownOnSquareIcon,
     icon: IconFileTypeSvg,
     name: "save",
     tooltip: "save svg",
   },
+
+   {
+    icon: EllipsisVerticalIcon,
+    name: "EllipsisVerticalIcon",
+    tooltip: "B         OK",
+    alignright: true,
+  },
+  { icon: Cog6ToothIcon, name: "Cog6ToothIcon", tooltip: "B         OK" },
+
+];
+
+const toolbar_define2 = [
+/*
+  {
+    //icon: ArrowDownOnSquareIcon,
+    icon: IconFileTypeSvg,
+    name: "save",
+    tooltip: "save svg",
+  },
+*/
   {
     icon: ArrowUturnLeftIcon,
     name: "undo",
@@ -435,13 +455,22 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
   <base-demo  initial-Percent=40
   >
     <template #left-pane>
+    <Toolbar
+      :toolbar_define="toolbar_define1"
+      :icon_flat_mode="false"
+      @toolbarItemClick="toolbarItemClick"
+      @toolbarItemToggle="toolbarItemToggle"
+      @toolbarItemSelect="toolbarItemSelect"
+      @toolbarItemRadio="toolbarItemRadio"
+      class="toolbar"
+    />
 	    <div  id="mermaid_render">
        <VueMermaidRender   :config="config" :content="code" @err-mermaid="err_mermaid"/>
 	    </div>
     </template>
     <template #right-pane>
     <Toolbar
-      :toolbar_define="toolbar_define"
+      :toolbar_define="toolbar_define2"
       :icon_flat_mode="false"
       @toolbarItemClick="toolbarItemClick"
       @toolbarItemToggle="toolbarItemToggle"
@@ -521,6 +550,9 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
   /*border-bottom : dotted 1px lightgray;*/
 }
 
+#mermaid_render {
+  overflow: auto;
+}
 
 </style>
 <style>
