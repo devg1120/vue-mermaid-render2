@@ -16,6 +16,8 @@ const emit = defineEmits([
   "toolbarItemRadio",
 ]);
 
+defineExpose({ toggle_state, toggle_off });
+
 function toggle_handler(name, state) {
   emit("toolbarItemToggle", name, state);
 }
@@ -45,11 +47,27 @@ function select_color_handler(name, data) {
   emit("toolbarItemSelectColor", name, data);
 }
 
+function toggle_state(){
+  for (let i = 0; i < itemref.value.length; i++) {
+    console.log(itemref.value[i].name(), itemref.value[i].isToggle());
+  }
+
+}
+function toggle_off(name){
+  for (let i = 0; i < itemref.value.length; i++) {
+    if (itemref.value[i].name() == name &&  itemref.value[i].isToggle()) {
+        itemref.value[i].toggle_off();
+    }
+  }
+
+}
+
 onMounted(() => {
   // emit = defineEmits(props.handler_define)
 });
 
 const radioref = ref(null);
+const itemref = ref(null);
 </script>
 
 <template>
@@ -57,6 +75,7 @@ const radioref = ref(null);
     <template v-for="item in props.toolbar_define" v-bind:key="item">
       <ToolbarItem8
         v-if="!item.select && !item.radio && !item.pic"
+        ref="itemref"
         :tooltip="item.tooltip"
         :name="item.name"
         :alignright="item.alignright"

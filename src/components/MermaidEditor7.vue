@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 
-import { ref, computed , onMounted } from 'vue';
+import { ref, computed , onMounted , useTemplateRef} from 'vue';
 //import { VueMermaidRender } from 'vue-mermaid-render';
 import  VueMermaidRender  from './VueMermaidRender.vue';
 
@@ -41,10 +41,14 @@ import { MagnifyingGlassPlusIcon  } from "@heroicons/vue/24/outline";
 import { MagnifyingGlassMinusIcon  } from "@heroicons/vue/24/outline";
 import { BookOpenIcon  } from "@heroicons/vue/24/outline";
 import { ArrowDownOnSquareIcon  } from "@heroicons/vue/24/outline";
+import { XMarkIcon  } from "@heroicons/vue/24/outline";
 
 //file-type-svg
 import { IconFileTypeSvg } from "@tabler/icons-vue";
 
+const toolbar1 = useTemplateRef("toolbar1");
+const toolbar2 = useTemplateRef("toolbar2");
+const toolbar3 = useTemplateRef("toolbar3");
 
 const doc_pane_percent = ref(100);
 
@@ -149,6 +153,28 @@ const toolbar_define2 = [
 
 ];
 
+const toolbar_define3 = [
+  {
+    //icon: ArrowDownOnSquareIcon,
+    icon: IconFileTypeSvg,
+    name: "save",
+    tooltip: "save svg",
+  },
+/*
+   {
+    icon: EllipsisVerticalIcon,
+    name: "EllipsisVerticalIcon",
+    tooltip: "B         OK",
+    alignright: true,
+  },
+  */
+  { 
+    icon: XMarkIcon, 
+    name: "refclose", 
+    alignright: true,
+    tooltip: "close" },
+
+];
 
 onErrorCaptured((error, insttance, info) => {
   // error: エラーのインスタンス
@@ -411,6 +437,12 @@ async function toolbarItemClick(data) {
      saveFile(filename, svgText);
      //let content = "hello world!!!";
      //saveFile(filename, content);
+  } else if (data == "refclose") {
+        toolbarItemToggle("book", false);
+	//toolbar1.value.toggle_state();
+	//toolbar2.value.toggle_state();
+	//toolbar3.value.toggle_state();
+	toolbar2.value.toggle_off("book");
   }
 
 }
@@ -456,6 +488,7 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
   >
     <template #left-pane>
     <Toolbar
+      ref="toolbar1"
       :toolbar_define="toolbar_define1"
       :icon_flat_mode="false"
       @toolbarItemClick="toolbarItemClick"
@@ -470,6 +503,7 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
     </template>
     <template #right-pane>
     <Toolbar
+      ref="toolbar2"
       :toolbar_define="toolbar_define2"
       :icon_flat_mode="false"
       @toolbarItemClick="toolbarItemClick"
@@ -533,6 +567,16 @@ function toolbarItemRadio(radio_name, radio_index, name, state) {
 -->
 	</template>
         <template #bottom-pane >
+    <Toolbar
+      ref="toolbar3"
+      :toolbar_define="toolbar_define3"
+      :icon_flat_mode="false"
+      @toolbarItemClick="toolbarItemClick"
+      @toolbarItemToggle="toolbarItemToggle"
+      @toolbarItemSelect="toolbarItemSelect"
+      @toolbarItemRadio="toolbarItemRadio"
+      class="toolbar"
+    />
 <!--
           <div>{{lorumipsum}}</div>
 -->
