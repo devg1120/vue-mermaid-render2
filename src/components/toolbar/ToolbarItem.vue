@@ -6,7 +6,7 @@ const props = defineProps(["tooltip", "name", "alignright"]);
 const emit = defineEmits(["toolbarItemClick", "toolbarItemToggle"]);
 const item = useTemplateRef("item");
 
-defineExpose({ name, isToggle , toggle_off});
+defineExpose({ name, isToggle , toggle_off, class_remove});
 
 
 function item_mousedown(e) {
@@ -28,6 +28,10 @@ function isToggle() {
 function toggle_off() {
   let icons = item.value.querySelectorAll(".icon");
   icons[0].classList.remove("mouse-down");
+}
+function class_remove(classname) {
+  let icons = item.value.querySelectorAll(".icon");
+  icons[0].classList.remove(classname);
 }
 
 onMounted(() => {

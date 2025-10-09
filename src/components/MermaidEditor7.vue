@@ -437,6 +437,7 @@ async function toolbarItemClick(data) {
      saveFile(filename, svgText);
      //let content = "hello world!!!";
      //saveFile(filename, content);
+	toolbar1.value.class_remove("save", "mouse-down");
   } else if (data == "refclose") {
         toolbarItemToggle("book", false);
 	//toolbar1.value.toggle_state();

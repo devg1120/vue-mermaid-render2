@@ -16,7 +16,7 @@ const emit = defineEmits([
   "toolbarItemRadio",
 ]);
 
-defineExpose({ toggle_state, toggle_off });
+defineExpose({ toggle_state, toggle_off, class_remove });
 
 function toggle_handler(name, state) {
   emit("toolbarItemToggle", name, state);
@@ -53,13 +53,20 @@ function toggle_state(){
   }
 
 }
+
 function toggle_off(name){
   for (let i = 0; i < itemref.value.length; i++) {
     if (itemref.value[i].name() == name &&  itemref.value[i].isToggle()) {
         itemref.value[i].toggle_off();
     }
   }
-
+}
+function class_remove(name, classname){
+  for (let i = 0; i < itemref.value.length; i++) {
+    if (itemref.value[i].name() == name ) {
+        itemref.value[i].class_remove(classname);
+    }
+  }
 }
 
 onMounted(() => {
